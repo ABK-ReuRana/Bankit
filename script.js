@@ -347,6 +347,7 @@ btnClose.addEventListener("click", function (e) {
   }
 
   inputCloseUsername.value = inputClosePin.value = "";
+  labelWelcome.textContent="Login to get started";
 });
 
 let sorted = false;

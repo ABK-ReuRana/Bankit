@@ -83,11 +83,6 @@ const formatMovementDate = function (date, locale) {
   if (daysPassed === 1) return "Yesterday";
   if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-  // const day = `${date.getDate()}`.padStart(2, 0);
-  // const month = `${date.getMonth() + 1}`.padStart(2, 0);
-  // const year = date.getFullYear();
-  // return `${day}/${month}/${year}`;
-
   return new Intl.DateTimeFormat(locale).format(date);
 };
 
@@ -98,31 +93,27 @@ const formatCur = function (value, locale, currency) {
   }).format(value);
 };
 
-const displayMovements = function (acc, sort = false) {
-  containerMovements.innerHTML = "";
+const displayMovements = function (acc, sort=false) {
 
-  const movs = sort
-    ? acc.movements.slice().sort((a, b) => a - b)
-    : acc.movements;
+  containerMovements.innerHTML = "";
+  const movs = (sort===true) ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
+  console.log(movs);
+  console.log(sort);
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
-
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovementDate(date, acc.locale);
-
     const formattedMov = formatCur(mov, acc.locale, acc.currency);
-
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
-      i + 1
-    } ${type}</div>
+      i + 1} ${type}</div>
+
         <div class="movements__date">${displayDate}</div>
         <div class="movements__value">${formattedMov}</div>
       </div>
     `;
-
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
@@ -168,10 +159,8 @@ createUsernames(accounts);
 const updateUI = function (acc) {
   // Display movements
   displayMovements(acc);
-
   // Display balance
   calcDisplayBalance(acc);
-
   // Display summary
   calcDisplaySummary(acc);
 };
@@ -205,14 +194,11 @@ const startLogOutTimer = function () {
   return timer;
 };
 
+
+
 ///////////////////////////////////////
 // Event handlers
 let currentAccount, timer;
-
-// FAKE ALWAYS LOGGED IN
-// currentAccount = account1;
-// updateUI(currentAccount);
-// containerApp.style.opacity = 100;
 
 btnLogin.addEventListener("click", function (e) {
   // Prevent form from submitting
@@ -240,21 +226,10 @@ btnLogin.addEventListener("click", function (e) {
       year: "numeric",
       // weekday: 'long',
     };
-    // const locale = navigator.language;
-    // console.log(locale);
-
     labelDate.textContent = new Intl.DateTimeFormat(
       currentAccount.locale,
       options
     ).format(now);
-
-    // const day = `${now.getDate()}`.padStart(2, 0);
-    // const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    // const year = now.getFullYear();
-    // const hour = `${now.getHours()}`.padStart(2, 0);
-    // const min = `${now.getMinutes()}`.padStart(2, 0);
-    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
-
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
@@ -267,6 +242,7 @@ btnLogin.addEventListener("click", function (e) {
     updateUI(currentAccount);
   }
 });
+
 
 btnTransfer.addEventListener("click", function (e) {
   e.preventDefault();
@@ -299,6 +275,7 @@ btnTransfer.addEventListener("click", function (e) {
   }
 });
 
+
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -326,6 +303,7 @@ btnLoan.addEventListener("click", function (e) {
   inputLoanAmount.value = "";
 });
 
+
 btnClose.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -347,8 +325,9 @@ btnClose.addEventListener("click", function (e) {
   }
 
   inputCloseUsername.value = inputClosePin.value = "";
-  labelWelcome.textContent="Login to get started";
+  labelWelcome.textContent="Login to get Started";
 });
+
 
 let sorted = false;
 btnSort.addEventListener("click", function (e) {
